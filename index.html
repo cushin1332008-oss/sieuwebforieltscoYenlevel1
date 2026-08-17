@@ -44,7 +44,7 @@
             transition: width 0.2s ease;
         }
         .sidebar.resizing-active {
-            transition: none; /* Tắt transition khi đang kéo thủ công để mượt hơn */
+            transition: none;
         }
         
         .sidebar-header {
@@ -139,7 +139,7 @@
             opacity: 0.2;
         }
 
-        /* --- RESIZER BAR (Thanh kéo tùy biến kích thước) --- */
+        /* --- RESIZER BAR --- */
         .resizer {
             width: 6px;
             background: #334155;
@@ -190,7 +190,7 @@
         .btn-apply-all { background-color: #16a34a; }
         .hint-text { font-size: 13px; color: #64748b; font-style: italic; margin-bottom: 10px; line-height: 1.5; }
         
-        .hw-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 700px; }
+        .hw-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
         .table-responsive { width: 100%; max-height: 70vh; overflow: auto; border-radius: 6px; border: 1px solid #cbd5e1; -webkit-overflow-scrolling: touch; }
         .hw-table th, .hw-table td { border-right: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; font-size: 14px; vertical-align: top; }
         .hw-table th { 
@@ -206,13 +206,27 @@
         .hw-table tr:hover { background-color: #f8fafc; }
         .student-name-input { width: 100%; border: 1px solid transparent; background: transparent; font-size: 14px; font-weight: bold; color: #1e3a8a; padding: 6px 8px; border-radius: 4px; }
         .student-name-input:focus { background: #fff; border-color: #3b82f6; outline: none; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
-        .hw-cell { display: flex; flex-direction: column; gap: 8px; min-width: 170px; }
-        .hw-input { width: 100%; border: 1px solid #e2e8f0; background: #f8fafc; padding: 8px 10px; font-size: 13.5px; border-radius: 4px; }
+        .hw-cell { display: flex; flex-direction: column; gap: 6px; min-width: 210px; }
+        .hw-input { width: 100%; border: 1px solid #e2e8f0; background: #f8fafc; padding: 6px 8px; font-size: 13px; border-radius: 4px; }
         .hw-input:focus { border-color: #3b82f6; background: #fff; outline: none; }
         
-        .status-options { display: flex; justify-content: space-around; font-size: 13px; }
-        .status-options label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: bold; padding: 6px 8px; border-radius: 4px; background: #f1f5f9; }
-        .status-options input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+        /* Cải tiến trạng thái & Ghi chú */
+        .status-options { display: flex; justify-content: space-between; gap: 2px; font-size: 12px; }
+        .status-options label { display: flex; align-items: center; gap: 3px; cursor: pointer; font-weight: bold; padding: 4px 5px; border-radius: 4px; background: #f1f5f9; user-select: none; }
+        .status-options input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; margin: 0; }
+        
+        .hw-note-input { 
+            width: 100%; 
+            border: 1px dashed #d97706; 
+            background: #fffbeb; 
+            padding: 5px 8px; 
+            font-size: 12px; 
+            border-radius: 4px; 
+            color: #b45309; 
+            outline: none;
+        }
+        .hw-note-input:focus { border-style: solid; border-color: #d97706; background: #fff; }
+
         .col-header-input { width: 100%; text-align: center; font-weight: bold; color: #1e3a8a; background: transparent; border: 1px solid transparent; font-size: 14px; padding: 4px; border-radius: 4px; }
         .col-header-input:focus { background: #fff; border-color: #3b82f6; outline: none; }
         .btn-delete-col { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 16px; padding: 2px 6px; margin-left: 4px; }
@@ -252,9 +266,7 @@
         .context-menu button { width: 100%; padding: 12px 15px; background: none; border: none; text-align: left; color: #ef4444; font-weight: bold; cursor: pointer; font-size: 14px; }
         .context-menu button:hover { background-color: #fef2f2; }
 
-        /* ========================================== */
         /* --- RESPONSIVE CHO ĐIỆN THOẠI & TABLET --- */
-        /* ========================================== */
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
@@ -369,7 +381,7 @@
         </div>
 
         <div class="hint-text">
-            💡 <b>Mẹo:</b> Nhấp nút <b>◀</b> để thu gọn menu. Kéo thanh chia cạnh menu để đổi kích thước. Nhấp chuột phải (hoặc nhấn giữ) vào Tên học sinh để Xóa.
+            💡 <b>Mẹo:</b> Tích chọn <b>1 phần</b> (màu cam) và điền chi tiết vào ô ghi chú nhỏ phía dưới để dễ dàng kiểm đếm và theo dõi tiến độ bài làm.
         </div>
 
         <div class="table-responsive">
@@ -456,7 +468,6 @@
     const toggleBtn = document.getElementById("toggleBtn");
     let isResizing = false;
 
-    // Tải cấu hình cũ từ localStorage khi mở trang
     const savedWidth = localStorage.getItem("ielts_sidebar_width");
     const savedCollapsed = localStorage.getItem("ielts_sidebar_collapsed");
 
@@ -467,7 +478,6 @@
         sidebar.style.width = `${savedWidth}px`;
     }
 
-    // Nút Thu gọn / Mở rộng 1-click
     function toggleSidebar() {
         sidebar.classList.toggle("collapsed");
         const isCollapsed = sidebar.classList.contains("collapsed");
@@ -480,7 +490,6 @@
         }
     }
 
-    // Sự kiện kéo tùy chỉnh kích thước Sidebar
     resizer.addEventListener("mousedown", (e) => {
         if (sidebar.classList.contains("collapsed")) return;
         isResizing = true;
@@ -551,7 +560,7 @@
     /* --- MODULE 1: QUẢN LÝ BTVN --- */
     /* ========================================== */
     let hwStudentsData = [];
-    let hwColumnsData = ["BTVN 1", "BTVN 2", "BTVN 3"];
+    let hwColumnsData = ["BTVN 1 LESSON 13", "BTVN 2 LESSON 13", "BTVN 3 LESSON 13"];
     let hwSelectedIndexToDelete = -1;
 
     function hwNormalizeData(dataList, numCols) {
@@ -559,12 +568,12 @@
             if (!student.hw) {
                 student.hw = [];
                 if (student.homework !== undefined) {
-                    student.hw.push({ text: student.homework, status: student.status });
+                    student.hw.push({ text: student.homework, status: student.status, note: "" });
                     delete student.homework;
                     delete student.status;
                 }
             }
-            while (student.hw.length < numCols) student.hw.push({ text: "", status: null });
+            while (student.hw.length < numCols) student.hw.push({ text: "", status: null, note: "" });
             if (student.hw.length > numCols) student.hw = student.hw.slice(0, numCols);
             return student;
         });
@@ -613,14 +622,27 @@
                             <input type="text" class="student-name-input" value="${student.name}" onchange="hwUpdateStudentName(${index}, this.value)">
                         </td>`;
             for(let i = 0; i < hwColumnsData.length; i++) {
-                let hw = student.hw[i] || { text: "", status: null };
+                let hw = student.hw[i] || { text: "", status: null, note: "" };
+                let isDone = (hw.status === true || hw.status === 'done');
+                let isPartial = (hw.status === 'partial');
+                let isNotDone = (hw.status === false || hw.status === 'not_done');
+                let noteVal = hw.note || "";
+
                 html += `<td>
                             <div class="hw-cell">
                                 <input type="text" class="hw-input" value="${hw.text}" onchange="hwUpdateHomework(${index}, ${i}, this.value)">
                                 <div class="status-options">
-                                    <label style="color: #15803d;"><input type="checkbox" ${hw.status === true ? 'checked' : ''} onclick="hwToggleStatus(${index}, ${i}, true)"> Đã làm</label>
-                                    <label style="color: #b91c1c;"><input type="checkbox" ${hw.status === false ? 'checked' : ''} onclick="hwToggleStatus(${index}, ${i}, false)"> Chưa làm</label>
+                                    <label style="color: #15803d;" title="Đã hoàn thành">
+                                        <input type="checkbox" ${isDone ? 'checked' : ''} onclick="hwToggleStatus(${index}, ${i}, 'done')"> Đã làm
+                                    </label>
+                                    <label style="color: #d97706;" title="Làm một phần / Chưa đủ">
+                                        <input type="checkbox" ${isPartial ? 'checked' : ''} onclick="hwToggleStatus(${index}, ${i}, 'partial')"> 1 phần
+                                    </label>
+                                    <label style="color: #b91c1c;" title="Chưa làm">
+                                        <input type="checkbox" ${isNotDone ? 'checked' : ''} onclick="hwToggleStatus(${index}, ${i}, 'not_done')"> Chưa làm
+                                    </label>
                                 </div>
+                                <input type="text" class="hw-note-input" value="${noteVal}" placeholder="📝 Ghi chú (VD: Thiếu Ex 3)..." onchange="hwUpdateNote(${index}, ${i}, this.value)">
                             </div>
                         </td>`;
             }
@@ -635,7 +657,7 @@
     }
     function hwAddColumn() {
         hwColumnsData.push(`BTVN ${hwColumnsData.length + 1}`);
-        hwStudentsData.forEach(st => st.hw.push({ text: "", status: null }));
+        hwStudentsData.forEach(st => st.hw.push({ text: "", status: null, note: "" }));
         hwSaveData(); hwRenderDynamicControl(); hwRenderTable();
     }
     function hwUpdateColumnName(index, newName) {
@@ -659,17 +681,34 @@
         hwStudentsData.forEach(st => st.hw[hwIndex].text = commonHw);
         hwSaveData(); hwRenderTable(); input.value = "";
     }
-    function hwUpdateHomework(sIdx, hIdx, val) { hwStudentsData[sIdx].hw[hIdx].text = val; hwSaveData(); }
-    function hwToggleStatus(sIdx, hIdx, isDone) {
+    function hwUpdateHomework(sIdx, hIdx, val) { 
+        if(!hwStudentsData[sIdx].hw[hIdx]) hwStudentsData[sIdx].hw[hIdx] = { text: "", status: null, note: "" };
+        hwStudentsData[sIdx].hw[hIdx].text = val; 
+        hwSaveData(); 
+    }
+    function hwUpdateNote(sIdx, hIdx, val) { 
+        if(!hwStudentsData[sIdx].hw[hIdx]) hwStudentsData[sIdx].hw[hIdx] = { text: "", status: null, note: "" };
+        hwStudentsData[sIdx].hw[hIdx].note = val; 
+        hwSaveData(); 
+    }
+    function hwToggleStatus(sIdx, hIdx, targetStatus) {
         const cur = hwStudentsData[sIdx].hw[hIdx].status;
-        hwStudentsData[sIdx].hw[hIdx].status = isDone ? (cur === true ? null : true) : (cur === false ? null : false);
+        let normalizedCur = cur;
+        if (cur === true) normalizedCur = 'done';
+        if (cur === false) normalizedCur = 'not_done';
+
+        if (normalizedCur === targetStatus) {
+            hwStudentsData[sIdx].hw[hIdx].status = null;
+        } else {
+            hwStudentsData[sIdx].hw[hIdx].status = targetStatus;
+        }
         hwSaveData(); hwRenderTable();
     }
     function hwAddStudent() {
         const input = document.getElementById("hwStudentInput");
         const name = input.value.trim();
         if (!name) return;
-        let arr = []; for(let i=0; i<hwColumnsData.length; i++) arr.push({text:"", status:null});
+        let arr = []; for(let i=0; i<hwColumnsData.length; i++) arr.push({text:"", status:null, note:""});
         hwStudentsData.push({ name: name, hw: arr });
         hwSaveData(); hwRenderTable(); input.value = "";
     }
@@ -691,9 +730,9 @@
     if (hwDbRef) {
         hwDbRef.on("value", snap => {
             const data = snap.val();
-            if (!data) { hwStudentsData = []; hwColumnsData = ["BTVN 1", "BTVN 2", "BTVN 3"]; }
+            if (!data) { hwStudentsData = []; hwColumnsData = ["BTVN 1 LESSON 13", "BTVN 2 LESSON 13", "BTVN 3 LESSON 13"]; }
             else {
-                hwColumnsData = data.columns || ["BTVN 1"];
+                hwColumnsData = data.columns || ["BTVN 1 LESSON 13"];
                 let raw = data.students ? (Array.isArray(data.students) ? data.students.filter(Boolean) : Object.values(data.students)) : [];
                 hwStudentsData = hwNormalizeData(raw, hwColumnsData.length);
             }
