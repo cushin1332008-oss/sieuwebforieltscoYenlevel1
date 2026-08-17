@@ -22,12 +22,13 @@
             margin: 0;
             display: flex;
             height: 100vh;
+            height: 100dvh;
             background-color: #f3f4f6;
             color: #1e293b;
             overflow: hidden;
         }
 
-        /* --- SIDEBAR NAVIGATION --- */
+        /* --- SIDEBAR NAVIGATION (Desktop) --- */
         .sidebar {
             width: 260px;
             background: #1e293b;
@@ -36,6 +37,7 @@
             flex-direction: column;
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
             z-index: 100;
+            flex-shrink: 0;
         }
         .sidebar h2 {
             padding: 20px;
@@ -89,27 +91,6 @@
         }
 
         /* --- SHARED STYLES --- */
-        .sync-status-bar {
-            background-color: #edf2f7;
-            color: #2d3748;
-            border: 1px solid #cbd5e0;
-            padding: 8px 14px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            background-color: #a0aec0;
-            border-radius: 50%;
-            display: inline-block;
-        }
         .text-center { text-align: center; }
         .font-bold { font-weight: bold; }
 
@@ -117,56 +98,132 @@
         .hw-title { text-align: center; color: #1e3a8a; margin-top: 0; margin-bottom: 20px; text-transform: uppercase; font-size: 24px; font-weight: 800;}
         .control-box { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; background: #f8fafc; padding: 15px; border: 1px solid #cbd5e1; border-radius: 8px; }
         .input-group { display: flex; gap: 10px; flex-wrap: wrap; }
-        .input-group input, .input-group select { flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none;}
-        .btn { color: white; border: none; padding: 9px 16px; font-weight: bold; border-radius: 6px; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
+        .input-group input, .input-group select { flex: 1; min-width: 200px; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; outline: none;}
+        .btn { color: white; border: none; padding: 10px 16px; font-weight: bold; border-radius: 6px; cursor: pointer; white-space: nowrap; transition: opacity 0.2s; }
         .btn:hover { opacity: 0.9; }
         .btn-add { background-color: #0284c7; }
         .btn-add-col { background-color: #8b5cf6; }
         .btn-apply-all { background-color: #16a34a; }
         .hint-text { font-size: 13px; color: #64748b; font-style: italic; margin-bottom: 10px; line-height: 1.5; }
         
-        .hw-table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        .table-responsive { width: 100%; overflow-x: auto; border-radius: 6px; border: 1px solid #cbd5e1; }
-        .hw-table th, .hw-table td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; font-size: 14px; vertical-align: top; }
-        .hw-table th { background-color: #f1f5f9; color: #1e3a8a; font-weight: bold; text-align: center; }
+        /* Cố định tiêu đề bảng khi cuộn */
+        .hw-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
+        .table-responsive { width: 100%; max-height: 70vh; overflow: auto; border-radius: 6px; border: 1px solid #cbd5e1; -webkit-overflow-scrolling: touch; }
+        .hw-table th, .hw-table td { border-right: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; font-size: 14px; vertical-align: top; }
+        .hw-table th { 
+            background-color: #f1f5f9; 
+            color: #1e3a8a; 
+            font-weight: bold; 
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
         .hw-table tr:hover { background-color: #f8fafc; }
         .student-name-input { width: 100%; border: 1px solid transparent; background: transparent; font-size: 14px; font-weight: bold; color: #1e3a8a; padding: 6px 8px; border-radius: 4px; }
         .student-name-input:focus { background: #fff; border-color: #3b82f6; outline: none; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
         .hw-cell { display: flex; flex-direction: column; gap: 8px; min-width: 180px; }
-        .hw-input { width: 100%; border: 1px solid #e2e8f0; background: #f8fafc; padding: 6px 8px; font-size: 13.5px; border-radius: 4px; }
+        .hw-input { width: 100%; border: 1px solid #e2e8f0; background: #f8fafc; padding: 8px 10px; font-size: 13.5px; border-radius: 4px; }
         .hw-input:focus { border-color: #3b82f6; background: #fff; outline: none; }
+        
+        /* Tăng kích thước khu vực chọn checkbox trên mobile */
         .status-options { display: flex; justify-content: space-around; font-size: 13px; }
-        .status-options label { display: flex; align-items: center; gap: 4px; cursor: pointer; font-weight: bold; }
-        .status-options input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
+        .status-options label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: bold; padding: 6px 8px; border-radius: 4px; background: #f1f5f9; }
+        .status-options input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
         .col-header-input { width: 100%; text-align: center; font-weight: bold; color: #1e3a8a; background: transparent; border: 1px solid transparent; font-size: 14px; padding: 4px; border-radius: 4px; }
         .col-header-input:focus { background: #fff; border-color: #3b82f6; outline: none; }
-        .btn-delete-col { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 14px; padding: 0 4px; margin-left: 4px; }
+        .btn-delete-col { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 16px; padding: 2px 6px; margin-left: 4px; }
 
         /* --- STYLES FOR APP 2 (REPORT) --- */
         h1.main-title { text-align: center; color: #000; margin-top: 0; margin-bottom: 20px; font-size: 28px; font-weight: 800; text-transform: uppercase; }
         .class-info { font-size: 16px; font-weight: 700; margin-bottom: 20px; line-height: 1.6; color: #000; }
         .section-title { color: #1a365d; font-size: 20px; margin-top: 30px; margin-bottom: 15px; text-transform: uppercase; border-bottom: 2px solid #ebf8ff; padding-bottom: 8px; }
-        .rp-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-        .rp-table th, .rp-table td { border: 1px solid #000; padding: 10px 12px; text-align: left; vertical-align: top; color: #000; }
-        .rp-table th { background-color: #fff; font-weight: 800; text-transform: uppercase; font-size: 14px; text-align: center; }
+        .rp-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 10px; min-width: 600px; }
+        .rp-table th, .rp-table td { border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 10px 12px; text-align: left; vertical-align: top; color: #000; }
+        .rp-table th { 
+            background-color: #fff; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            font-size: 14px; 
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
         .feedback-table th { background-color: #ebf8ff; color: #2b6cb0; border-color: #cbd5e0; }
         .feedback-table td { border-color: #cbd5e0; }
         .feedback-table td:nth-child(2), .feedback-table td:nth-child(3) { text-align: center; vertical-align: middle; }
         .feedback-table tr:nth-child(even) { background-color: #f7fafc; }
         .feedback-table tr.context-selected { background-color: #fff5f5 !important; outline: 2px solid #e53e3e; }
-        [contenteditable="true"] { outline: 2px solid transparent; transition: outline 0.2s, background 0.2s; border-radius: 3px; padding: 2px 4px; }
+        [contenteditable="true"] { outline: 2px solid transparent; transition: outline 0.2s, background 0.2s; border-radius: 3px; padding: 4px; }
         [contenteditable="true"]:focus { outline: 2px solid #4299e1; background-color: #fff; }
         [contenteditable="true"]:hover { background-color: #edf2f7; }
         .save-status { text-align: center; font-size: 13px; color: #38a169; font-weight: bold; height: 18px; margin-top: 15px; margin-bottom: 10px; }
-        .bottom-toolbar { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e0; }
-        .btn-group-left { display: flex; gap: 10px; }
+        .bottom-toolbar { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e0; flex-wrap: wrap; gap: 10px; }
+        .btn-group-left { display: flex; gap: 10px; flex-wrap: wrap; }
         .btn-print { background-color: #2b6cb0; }
         .btn-reset { background-color: #e53e3e; }
 
         /* --- CONTEXT MENUS --- */
         .context-menu { display: none; position: absolute; z-index: 1000; background: white; border: 1px solid #cbd5e1; box-shadow: 0 4px 8px rgba(0,0,0,0.15); border-radius: 6px; overflow: hidden; min-width: 160px; }
-        .context-menu button { width: 100%; padding: 10px 15px; background: none; border: none; text-align: left; color: #ef4444; font-weight: bold; cursor: pointer; font-size: 13.5px; }
+        .context-menu button { width: 100%; padding: 12px 15px; background: none; border: none; text-align: left; color: #ef4444; font-weight: bold; cursor: pointer; font-size: 14px; }
         .context-menu button:hover { background-color: #fef2f2; }
+
+        /* ========================================== */
+        /* --- RESPONSIVE CHO ĐIỆN THOẠI & TABLET --- */
+        /* ========================================== */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                overflow: auto;
+                height: auto;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                flex-shrink: 0;
+                position: sticky;
+                top: 0;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+            .sidebar h2 {
+                display: none;
+            }
+            .nav-btn {
+                flex: 1;
+                text-align: center;
+                padding: 12px 8px;
+                font-size: 13.5px;
+                border-bottom: none;
+                border-right: 1px solid #334155;
+                white-space: nowrap;
+            }
+            .nav-btn.active {
+                border-left: none;
+                border-bottom: 3px solid #38bdf8;
+            }
+            .main-content {
+                padding: 10px;
+                overflow-y: visible;
+            }
+            .app-section {
+                padding: 12px;
+                border-radius: 6px;
+                box-shadow: none;
+            }
+            .hw-title { font-size: 18px; margin-bottom: 12px; }
+            h1.main-title { font-size: 20px; }
+            .control-box { padding: 10px; gap: 8px; }
+            .input-group { flex-direction: column; gap: 8px; }
+            .input-group input, .input-group select { width: 100%; min-width: unset; }
+            .btn { width: 100%; padding: 12px; text-align: center; font-size: 14px; }
+            .table-responsive { max-height: 60vh; }
+            .bottom-toolbar { flex-direction: column; align-items: stretch; }
+            .btn-group-left { flex-direction: column; width: 100%; }
+            .btn-group-left button { width: 100%; }
+        }
 
         /* --- PRINT STYLES --- */
         @media print {
@@ -174,7 +231,7 @@
             .sidebar { display: none !important; }
             .main-content { padding: 0; }
             .app-section { box-shadow: none; padding: 0; border: none; }
-            .sync-status-bar, .bottom-toolbar, .save-status, .control-box, .hint-text { display: none !important; }
+            .bottom-toolbar, .save-status, .control-box, .hint-text { display: none !important; }
             .feedback-table tr.context-selected { outline: none !important; background-color: transparent !important; }
             .feedback-table th { background-color: #f0f0f0 !important; color: #000 !important; border-color: #000 !important; }
             .feedback-table td { border-color: #000 !important; }
@@ -193,21 +250,14 @@
 <!-- MAIN CONTENT -->
 <div class="main-content">
 
-    <!-- ============================================== -->
     <!-- MODULE 1: QUẢN LÝ BTVN -->
-    <!-- ============================================== -->
     <div id="hwApp" class="app-section active">
-        <div class="sync-status-bar" id="hwSyncBar">
-            <span class="status-dot" id="hwStatusDot"></span>
-            <span id="hwSyncText">Đang kết nối cơ sở dữ liệu BTVN...</span>
-        </div>
-
         <h2 class="hw-title">📋 Theo Dõi Bài Tập Về Nhà</h2>
 
         <div class="control-box">
             <div class="input-group">
                 <select id="hwCommonSelect"></select>
-                <input type="text" id="hwCommonInput" placeholder="Nhập nội dung Bài Tập Về Nhà chung...">
+                <input type="text" id="hwCommonInput" placeholder="Nhập nội dung BTVN chung...">
                 <button class="btn btn-apply-all" onclick="hwApplyToAll()">⚡ Áp dụng</button>
             </div>
             <div class="input-group">
@@ -218,7 +268,7 @@
         </div>
 
         <div class="hint-text">
-            💡 <b>Mẹo:</b> Nhấp chuột phải vào Tên học sinh để Xóa học sinh đó. Bấm dấu ✖ màu đỏ để Xóa cột.
+            💡 <b>Mẹo:</b> Nhấp chuột phải (hoặc nhấn giữ trên mobile) vào Tên học sinh để Xóa. Vuốt sang ngang để xem thêm cột BTVN.
         </div>
 
         <div class="table-responsive">
@@ -231,16 +281,8 @@
         </div>
     </div>
 
-
-    <!-- ============================================== -->
     <!-- MODULE 2: BÁO CÁO LỚP HỌC & NHẬN XÉT -->
-    <!-- ============================================== -->
     <div id="reportApp" class="app-section">
-        <div class="sync-status-bar" id="rpSyncBar">
-            <span class="status-dot" id="rpStatusDot"></span>
-            <span id="rpSyncText">Đang khởi tạo ứng dụng báo cáo...</span>
-        </div>
-
         <h1 class="main-title">BÁO CÁO LỚP HỌC</h1>
         
         <div class="class-info">
@@ -249,33 +291,37 @@
             <div>Ngày: <span contenteditable="true" spellcheck="false" id="rpInfoDate" oninput="rpAutoSave()">27/07/2026</span></div>
         </div>
 
-        <table class="rp-table">
-            <thead>
-                <tr>
-                    <th style="width: 50%;">Nội dung</th>
-                    <th style="width: 50%;">BTVN</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td contenteditable="true" spellcheck="false" id="rpLessonContent" oninput="rpAutoSave()">- Nhập nội dung học...</td>
-                    <td contenteditable="true" spellcheck="false" id="rpLessonHomework" oninput="rpAutoSave()">- Nhập BTVN...</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="rp-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">Nội dung</th>
+                        <th style="width: 50%;">BTVN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td contenteditable="true" spellcheck="false" id="rpLessonContent" oninput="rpAutoSave()">- Nhập nội dung học...</td>
+                        <td contenteditable="true" spellcheck="false" id="rpLessonHomework" oninput="rpAutoSave()">- Nhập BTVN...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <h2 class="section-title">Nhận xét từng bạn</h2>
-        <table class="rp-table feedback-table">
-            <thead>
-                <tr>
-                    <th style="width: 18%;">Họ và tên</th>
-                    <th style="width: 22%;">BTVN</th>
-                    <th style="width: 10%;" class="text-center">Điểm KT</th>
-                    <th style="width: 50%;">Nhận xét</th>
-                </tr>
-            </thead>
-            <tbody id="rpTableBody"></tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="rp-table feedback-table">
+                <thead>
+                    <tr>
+                        <th style="width: 18%;">Họ và tên</th>
+                        <th style="width: 22%;">BTVN</th>
+                        <th style="width: 10%;" class="text-center">Điểm KT</th>
+                        <th style="width: 50%;">Nhận xét</th>
+                    </tr>
+                </thead>
+                <tbody id="rpTableBody"></tbody>
+            </table>
+        </div>
 
         <div class="save-status" id="rpSaveStatus"></div>
 
@@ -301,22 +347,15 @@
 </div>
 
 <script>
-    // ==========================================
-    // GLOBAL LOGIC (TAB NAVIGATION)
-    // ==========================================
     function switchTab(tabId) {
         document.querySelectorAll('.app-section').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         document.getElementById('nav-' + tabId).classList.add('active');
-        // Hide menus when switching
         hwHideContextMenu();
         rpHideContextMenu();
     }
 
-    // ==========================================
-    // FIREBASE INITIALIZATION FOR BOTH APPS
-    // ==========================================
     const hwFirebaseConfig = {
         apiKey: "AIzaSyAJH71kl9P57Sq9l8mnJ-LkL8m53o1nf8A",
         databaseURL: "https://checkbtaphocsinhieltslevel1-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -331,7 +370,6 @@
     let hwDbRef, rpDbRef;
 
     try {
-        // Initialize two separate apps
         hwAppRef = firebase.initializeApp(hwFirebaseConfig, "hwApp");
         rpAppRef = firebase.initializeApp(rpFirebaseConfig, "rpApp");
         
@@ -341,10 +379,6 @@
         console.error("Firebase Init Error:", e);
     }
 
-
-    // ==========================================
-    // SCRIPT FOR APP 1 (HW)
-    // ==========================================
     let hwStudentsData = [];
     let hwColumnsData = ["BTVN 1", "BTVN 2", "BTVN 3"];
     let hwSelectedIndexToDelete = -1;
@@ -483,13 +517,9 @@
     }
     function hwHideContextMenu() { hwMenu.style.display = "none"; hwSelectedIndexToDelete = -1; }
 
-    // HW Firebase Listener
     if (hwDbRef) {
         hwDbRef.on("value", snap => {
             const data = snap.val();
-            document.getElementById("hwSyncText").innerText = "🟢 DB-HW: Online";
-            document.getElementById("hwSyncBar").style.backgroundColor = "#e6fffa";
-            
             if (!data) { hwStudentsData = []; hwColumnsData = ["BTVN 1", "BTVN 2", "BTVN 3"]; }
             else {
                 hwColumnsData = data.columns || ["BTVN 1"];
@@ -497,14 +527,9 @@
                 hwStudentsData = hwNormalizeData(raw, hwColumnsData.length);
             }
             hwRenderDynamicControl(); hwRenderTable();
-        }, err => {
-            document.getElementById("hwSyncText").innerText = "🔴 DB-HW: Error";
         });
     }
 
-    // ==========================================
-    // SCRIPT FOR APP 2 (REPORT)
-    // ==========================================
     const rpTableBody = document.getElementById("rpTableBody");
     const rpSaveStatus = document.getElementById("rpSaveStatus");
     const rpMenu = document.getElementById("rpContextMenu");
@@ -594,7 +619,7 @@
         const btn = document.getElementById("btnExportPdf");
         const oldText = btn.innerText; btn.disabled = true; btn.innerText = "⏳ Đang tạo PDF...";
         const container = document.getElementById("reportApp");
-        const hiddenEls = container.querySelectorAll(".sync-status-bar, .bottom-toolbar, .save-status");
+        const hiddenEls = container.querySelectorAll(".bottom-toolbar, .save-status");
         
         hiddenEls.forEach(el => el.style.display = "none");
         if (rpTargetRow) rpTargetRow.classList.remove("context-selected");
@@ -625,32 +650,23 @@
 
     function rpResetData() {
         if (confirm("Reset lại báo cáo?")) {
-            if (rpDbRef) rpDbRef.set({}); // Tự tạo lại hoặc clear
+            if (rpDbRef) rpDbRef.set({});
         }
     }
 
-    // RP Firebase Listener
     if (rpDbRef) {
         rpDbRef.on("value", snap => {
             const data = snap.val();
-            document.getElementById("rpSyncText").innerText = "🟢 DB-REPORT: Online";
-            document.getElementById("rpSyncBar").style.backgroundColor = "#e6fffa";
             if (!rpIsEditing && data) rpApplyData(data);
-        }, err => {
-            document.getElementById("rpSyncText").innerText = "🔴 DB-REPORT: Error";
         });
     }
 
-    // ==========================================
-    // GLOBAL EVENT LISTENERS (Hide Menus)
-    // ==========================================
     document.addEventListener("click", e => {
         if (e.button !== 2) {
             hwHideContextMenu();
             if (!e.target.closest("#rpContextMenu")) rpHideContextMenu();
         }
     });
-
 </script>
 </body>
 </html>
