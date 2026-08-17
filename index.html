@@ -28,7 +28,7 @@
             overflow: hidden;
         }
 
-        /* --- SIDEBAR NAVIGATION (Desktop) --- */
+        /* --- SIDEBAR NAVIGATION --- */
         .sidebar {
             width: 240px;
             min-width: 150px;
@@ -206,14 +206,15 @@
         .hw-table tr:hover { background-color: #f8fafc; }
         .student-name-input { width: 100%; border: 1px solid transparent; background: transparent; font-size: 14px; font-weight: bold; color: #1e3a8a; padding: 6px 8px; border-radius: 4px; }
         .student-name-input:focus { background: #fff; border-color: #3b82f6; outline: none; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
-        .hw-cell { display: flex; flex-direction: column; gap: 6px; min-width: 210px; }
+        
+        .hw-cell { display: flex; flex-direction: column; gap: 6px; min-width: 220px; }
         .hw-input { width: 100%; border: 1px solid #e2e8f0; background: #f8fafc; padding: 6px 8px; font-size: 13px; border-radius: 4px; }
         .hw-input:focus { border-color: #3b82f6; background: #fff; outline: none; }
         
-        /* Cải tiến trạng thái & Ghi chú */
-        .status-options { display: flex; justify-content: space-between; gap: 2px; font-size: 12px; }
-        .status-options label { display: flex; align-items: center; gap: 3px; cursor: pointer; font-weight: bold; padding: 4px 5px; border-radius: 4px; background: #f1f5f9; user-select: none; }
-        .status-options input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; margin: 0; }
+        /* Trạng thái 3 tùy chọn & Ô ghi chú */
+        .status-options { display: flex; justify-content: space-between; gap: 4px; font-size: 12px; }
+        .status-options label { display: flex; align-items: center; gap: 3px; cursor: pointer; font-weight: bold; padding: 4px 6px; border-radius: 4px; background: #f1f5f9; user-select: none; }
+        .status-options input[type="checkbox"] { width: 14px; height: 14px; cursor: pointer; margin: 0; }
         
         .hw-note-input { 
             width: 100%; 
@@ -266,7 +267,7 @@
         .context-menu button { width: 100%; padding: 12px 15px; background: none; border: none; text-align: left; color: #ef4444; font-weight: bold; cursor: pointer; font-size: 14px; }
         .context-menu button:hover { background-color: #fef2f2; }
 
-        /* --- RESPONSIVE CHO ĐIỆN THOẠI & TABLET --- */
+        /* --- RESPONSIVE CHO MOBILE & TABLET --- */
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
@@ -381,7 +382,7 @@
         </div>
 
         <div class="hint-text">
-            💡 <b>Mẹo:</b> Tích chọn <b>1 phần</b> (màu cam) và điền chi tiết vào ô ghi chú nhỏ phía dưới để dễ dàng kiểm đếm và theo dõi tiến độ bài làm.
+            💡 <b>Mẹo:</b> Đánh dấu <b>1 phần</b> (màu cam) và ghi rõ chi tiết vào ô ghi chú ở phía dưới mỗi ô bài tập để dễ theo dõi và thống kê tiến độ.
         </div>
 
         <div class="table-responsive">
@@ -461,7 +462,7 @@
 
 <script>
     /* ========================================== */
-    /* --- XỬ LÝ SIDEBAR RESIZE & SAVE STATE --- */
+    /* --- SIDEBAR RESIZE & SAVE STATE --- */
     /* ========================================== */
     const sidebar = document.getElementById("sidebar");
     const resizer = document.getElementById("resizer");
@@ -519,7 +520,7 @@
     });
 
     /* ========================================== */
-    /* --- CHUYỂN TAB NAVIGATION --- */
+    /* --- TAB NAVIGATION --- */
     /* ========================================== */
     function switchTab(tabId) {
         document.querySelectorAll('.app-section').forEach(el => el.classList.remove('active'));
