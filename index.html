@@ -14,167 +14,36 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Arial, sans-serif;
-        }
-        body {
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            height: 100dvh;
-            background-color: #f3f4f6;
-            color: #1e293b;
-            overflow: hidden;
-        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { margin: 0; display: flex; height: 100vh; height: 100dvh; background-color: #f3f4f6; color: #1e293b; overflow: hidden; }
 
         /* --- SIDEBAR NAVIGATION --- */
-        .sidebar {
-            width: 240px;
-            min-width: 150px;
-            max-width: 450px;
-            background: #1e293b;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            z-index: 100;
-            flex-shrink: 0;
-            overflow: hidden;
-            transition: width 0.2s ease;
-        }
-        .sidebar.resizing-active {
-            transition: none;
-        }
-        
-        .sidebar-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 12px;
-            border-bottom: 1px solid #334155;
-            background: #0f172a;
-        }
-        .sidebar-title {
-            font-weight: bold;
-            font-size: 15px;
-            color: #38bdf8;
-            text-transform: uppercase;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .toggle-btn {
-            background: #334155;
-            border: none;
-            color: #cbd5e1;
-            border-radius: 4px;
-            cursor: pointer;
-            padding: 6px 10px;
-            font-size: 12px;
-            transition: background 0.2s, color 0.2s;
-            flex-shrink: 0;
-        }
-        .toggle-btn:hover {
-            background: #0284c7;
-            color: white;
-        }
-
-        .nav-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 18px 16px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            color: #cbd5e1;
-            text-align: left;
-            font-size: 15px;
-            font-weight: bold;
-            border-bottom: 1px solid #334155;
-            transition: background 0.2s, color 0.2s;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-        .nav-btn:hover {
-            background: #334155;
-            color: white;
-        }
-        .nav-btn.active {
-            background: #0284c7;
-            color: white;
-            border-left: 4px solid #38bdf8;
-        }
-        .nav-icon {
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        .nav-text {
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* --- COLLAPSED SIDEBAR STATE --- */
-        .sidebar.collapsed {
-            width: 65px !important;
-            min-width: 65px !important;
-        }
-        .sidebar.collapsed .sidebar-title {
-            display: none;
-        }
-        .sidebar.collapsed .sidebar-header {
-            justify-content: center;
-            padding: 15px 5px;
-        }
-        .sidebar.collapsed .nav-btn {
-            justify-content: center;
-            padding: 18px 0;
-        }
-        .sidebar.collapsed .nav-text {
-            display: none;
-        }
-        .sidebar.collapsed + .resizer {
-            pointer-events: none;
-            opacity: 0.2;
-        }
+        .sidebar { width: 240px; min-width: 150px; max-width: 450px; background: #1e293b; color: white; display: flex; flex-direction: column; box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 100; flex-shrink: 0; overflow: hidden; transition: width 0.2s ease; }
+        .sidebar.resizing-active { transition: none; }
+        .sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 15px 12px; border-bottom: 1px solid #334155; background: #0f172a; }
+        .sidebar-title { font-weight: bold; font-size: 15px; color: #38bdf8; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .toggle-btn { background: #334155; border: none; color: #cbd5e1; border-radius: 4px; cursor: pointer; padding: 6px 10px; font-size: 12px; transition: background 0.2s, color 0.2s; flex-shrink: 0; }
+        .toggle-btn:hover { background: #0284c7; color: white; }
+        .nav-btn { display: flex; align-items: center; gap: 12px; padding: 18px 16px; cursor: pointer; border: none; background: none; color: #cbd5e1; text-align: left; font-size: 15px; font-weight: bold; border-bottom: 1px solid #334155; transition: background 0.2s, color 0.2s; white-space: nowrap; overflow: hidden; }
+        .nav-btn:hover { background: #334155; color: white; }
+        .nav-btn.active { background: #0284c7; color: white; border-left: 4px solid #38bdf8; }
+        .nav-icon { font-size: 18px; flex-shrink: 0; }
+        .nav-text { overflow: hidden; text-overflow: ellipsis; }
+        .sidebar.collapsed { width: 65px !important; min-width: 65px !important; }
+        .sidebar.collapsed .sidebar-title { display: none; }
+        .sidebar.collapsed .sidebar-header { justify-content: center; padding: 15px 5px; }
+        .sidebar.collapsed .nav-btn { justify-content: center; padding: 18px 0; }
+        .sidebar.collapsed .nav-text { display: none; }
+        .sidebar.collapsed + .resizer { pointer-events: none; opacity: 0.2; }
 
         /* --- RESIZER BAR --- */
-        .resizer {
-            width: 6px;
-            background: #334155;
-            cursor: col-resize;
-            transition: background 0.2s;
-            z-index: 101;
-            flex-shrink: 0;
-            user-select: none;
-        }
-        .resizer:hover, .resizer.resizing {
-            background: #38bdf8;
-        }
+        .resizer { width: 6px; background: #334155; cursor: col-resize; transition: background 0.2s; z-index: 101; flex-shrink: 0; user-select: none; }
+        .resizer:hover, .resizer.resizing { background: #38bdf8; }
 
         /* --- MAIN CONTENT AREA --- */
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            min-width: 0;
-        }
-        .app-section {
-            display: none;
-            max-width: 1400px;
-            margin: 0 auto;
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            position: relative;
-        }
-        .app-section.active {
-            display: block;
-        }
-
-        /* --- SHARED STYLES --- */
+        .main-content { flex: 1; overflow-y: auto; padding: 20px; min-width: 0; }
+        .app-section { display: none; max-width: 1400px; margin: 0 auto; background: #ffffff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); position: relative; }
+        .app-section.active { display: block; }
         .text-center { text-align: center; }
         .font-bold { font-weight: bold; }
 
@@ -189,45 +58,21 @@
         .btn-add-col { background-color: #8b5cf6; }
         .btn-apply-all { background-color: #16a34a; }
         .hint-text { font-size: 13px; color: #64748b; font-style: italic; margin-bottom: 10px; line-height: 1.5; }
-        
         .hw-table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 800px; }
         .table-responsive { width: 100%; max-height: 70vh; overflow: auto; border-radius: 6px; border: 1px solid #cbd5e1; -webkit-overflow-scrolling: touch; }
         .hw-table th, .hw-table td { border-right: 1px solid #cbd5e1; border-bottom: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; font-size: 14px; vertical-align: top; }
-        .hw-table th { 
-            background-color: #f1f5f9; 
-            color: #1e3a8a; 
-            font-weight: bold; 
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
+        .hw-table th { background-color: #f1f5f9; color: #1e3a8a; font-weight: bold; text-align: center; position: sticky; top: 0; z-index: 10; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .hw-table tr:hover { background-color: #f8fafc; }
         .student-name-input { width: 100%; border: 1px solid transparent; background: transparent; font-size: 14px; font-weight: bold; color: #1e3a8a; padding: 6px 8px; border-radius: 4px; }
         .student-name-input:focus { background: #fff; border-color: #3b82f6; outline: none; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
-        
         .hw-cell { display: flex; flex-direction: column; gap: 6px; min-width: 220px; }
         .hw-input { width: 100%; border: 1px solid #e2e8f0; background: #f8fafc; padding: 6px 8px; font-size: 13px; border-radius: 4px; }
         .hw-input:focus { border-color: #3b82f6; background: #fff; outline: none; }
-        
-        /* Trạng thái 3 tùy chọn & Ô ghi chú */
         .status-options { display: flex; justify-content: space-between; gap: 4px; font-size: 12px; }
         .status-options label { display: flex; align-items: center; gap: 3px; cursor: pointer; font-weight: bold; padding: 4px 6px; border-radius: 4px; background: #f1f5f9; user-select: none; }
         .status-options input[type="checkbox"] { width: 14px; height: 14px; cursor: pointer; margin: 0; }
-        
-        .hw-note-input { 
-            width: 100%; 
-            border: 1px dashed #d97706; 
-            background: #fffbeb; 
-            padding: 5px 8px; 
-            font-size: 12px; 
-            border-radius: 4px; 
-            color: #b45309; 
-            outline: none;
-        }
+        .hw-note-input { width: 100%; border: 1px dashed #d97706; background: #fffbeb; padding: 5px 8px; font-size: 12px; border-radius: 4px; color: #b45309; outline: none; }
         .hw-note-input:focus { border-style: solid; border-color: #d97706; background: #fff; }
-
         .col-header-input { width: 100%; text-align: center; font-weight: bold; color: #1e3a8a; background: transparent; border: 1px solid transparent; font-size: 14px; padding: 4px; border-radius: 4px; }
         .col-header-input:focus { background: #fff; border-color: #3b82f6; outline: none; }
         .btn-delete-col { background: none; border: none; color: #ef4444; cursor: pointer; font-size: 16px; padding: 2px 6px; margin-left: 4px; }
@@ -238,16 +83,7 @@
         .section-title { color: #1a365d; font-size: 20px; margin-top: 30px; margin-bottom: 15px; text-transform: uppercase; border-bottom: 2px solid #ebf8ff; padding-bottom: 8px; }
         .rp-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-bottom: 10px; min-width: 550px; }
         .rp-table th, .rp-table td { border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 10px 12px; text-align: left; vertical-align: top; color: #000; }
-        .rp-table th { 
-            background-color: #fff; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            font-size: 14px; 
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
+        .rp-table th { background-color: #fff; font-weight: 800; text-transform: uppercase; font-size: 14px; text-align: center; position: sticky; top: 0; z-index: 10; }
         .feedback-table th { background-color: #ebf8ff; color: #2b6cb0; border-color: #cbd5e0; }
         .feedback-table td { border-color: #cbd5e0; }
         .feedback-table td:nth-child(2), .feedback-table td:nth-child(3) { text-align: center; vertical-align: middle; }
@@ -256,9 +92,13 @@
         [contenteditable="true"] { outline: 2px solid transparent; transition: outline 0.2s, background 0.2s; border-radius: 3px; padding: 4px; }
         [contenteditable="true"]:focus { outline: 2px solid #4299e1; background-color: #fff; }
         [contenteditable="true"]:hover { background-color: #edf2f7; }
-        .save-status { text-align: center; font-size: 13px; color: #38a169; font-weight: bold; height: 18px; margin-top: 15px; margin-bottom: 10px; }
+        .save-status { text-align: center; font-size: 13px; color: #38a169; font-weight: bold; height: 18px; margin-top: 10px; }
+        
+        /* Chỉnh lại khu vực Bottom cho Report */
+        .quick-stats { background-color: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; padding: 15px; border-radius: 8px; font-weight: 700; text-align: center; margin-top: 15px; font-size: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .bottom-toolbar { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #cbd5e0; flex-wrap: wrap; gap: 10px; }
         .btn-group-left { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-group-right { display: flex; gap: 10px; flex-wrap: wrap; }
         .btn-print { background-color: #2b6cb0; }
         .btn-reset { background-color: #e53e3e; }
 
@@ -269,52 +109,15 @@
 
         /* --- RESPONSIVE CHO MOBILE & TABLET --- */
         @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-                overflow: auto;
-                height: auto;
-            }
-            .sidebar {
-                width: 100% !important;
-                min-width: unset !important;
-                max-width: unset !important;
-                height: auto;
-                flex-direction: row;
-                flex-shrink: 0;
-                position: sticky;
-                top: 0;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            }
-            .sidebar-header, .resizer {
-                display: none !important;
-            }
-            .sidebar.collapsed {
-                width: 100% !important;
-            }
-            .nav-btn {
-                flex: 1;
-                justify-content: center;
-                padding: 12px 8px;
-                font-size: 13.5px;
-                border-bottom: none;
-                border-right: 1px solid #334155;
-            }
-            .nav-text {
-                display: inline !important;
-            }
-            .nav-btn.active {
-                border-left: none;
-                border-bottom: 3px solid #38bdf8;
-            }
-            .main-content {
-                padding: 10px;
-                overflow-y: visible;
-            }
-            .app-section {
-                padding: 12px;
-                border-radius: 6px;
-                box-shadow: none;
-            }
+            body { flex-direction: column; overflow: auto; height: auto; }
+            .sidebar { width: 100% !important; min-width: unset !important; max-width: unset !important; height: auto; flex-direction: row; flex-shrink: 0; position: sticky; top: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+            .sidebar-header, .resizer { display: none !important; }
+            .sidebar.collapsed { width: 100% !important; }
+            .nav-btn { flex: 1; justify-content: center; padding: 12px 8px; font-size: 13.5px; border-bottom: none; border-right: 1px solid #334155; }
+            .nav-text { display: inline !important; }
+            .nav-btn.active { border-left: none; border-bottom: 3px solid #38bdf8; }
+            .main-content { padding: 10px; overflow-y: visible; }
+            .app-section { padding: 12px; border-radius: 6px; box-shadow: none; }
             .hw-title { font-size: 18px; margin-bottom: 12px; }
             h1.main-title { font-size: 20px; }
             .control-box { padding: 10px; gap: 8px; }
@@ -323,8 +126,9 @@
             .btn { width: 100%; padding: 12px; text-align: center; font-size: 14px; }
             .table-responsive { max-height: 60vh; }
             .bottom-toolbar { flex-direction: column; align-items: stretch; }
-            .btn-group-left { flex-direction: column; width: 100%; }
-            .btn-group-left button { width: 100%; }
+            .btn-group-left, .btn-group-right { flex-direction: column; width: 100%; }
+            .btn-group-left button, .btn-group-right button { width: 100%; }
+            .quick-stats { font-size: 13px; padding: 10px; }
         }
 
         /* --- PRINT STYLES --- */
@@ -333,7 +137,7 @@
             .sidebar, .resizer { display: none !important; }
             .main-content { padding: 0; }
             .app-section { box-shadow: none; padding: 0; border: none; }
-            .bottom-toolbar, .save-status, .control-box, .hint-text { display: none !important; }
+            .bottom-toolbar, .save-status, .control-box, .hint-text, .quick-stats { display: none !important; }
             .feedback-table tr.context-selected { outline: none !important; background-color: transparent !important; }
             .feedback-table th { background-color: #f0f0f0 !important; color: #000 !important; border-color: #000 !important; }
             .feedback-table td { border-color: #000 !important; }
@@ -438,14 +242,25 @@
         </div>
 
         <div class="save-status" id="rpSaveStatus"></div>
+        
+        <!-- THANH THỐNG KÊ TỰ ĐỘNG -->
+        <div class="quick-stats" id="rpQuickStats">
+            📊 Thống kê nhanh: Sĩ số: 0 | Đầy đủ BTVN: 0 | Thiếu/Không làm: 0 | Điểm TB: 0.00
+        </div>
 
+        <!-- THANH CÔNG CỤ DƯỚI CÙNG -->
         <div class="bottom-toolbar">
             <div class="btn-group-left">
                 <button class="btn btn-add" onclick="rpAddRow()">+ Thêm học sinh</button>
-                <button class="btn btn-print" id="btnExportPdf" onclick="rpExportToPDF()">📄 Tải file PDF</button>
-                <button class="btn btn-print" style="background-color:#4a5568;" onclick="window.print()">🖨️ In (máy in)</button>
+                <button class="btn btn-print" style="background-color: #8b5cf6;" onclick="rpSyncFromHW()">⚡ Đồng bộ từ BTVN</button>
+                <button class="btn btn-print" style="background-color: #10b981;" onclick="rpExportToCSV()">📊 Tải Excel</button>
+                <button class="btn btn-print" id="btnExportPdf" onclick="rpExportToPDF()">📄 Tải PDF</button>
+                <button class="btn btn-print" style="background-color:#4a5568;" onclick="window.print()">🖨️ In ấn</button>
             </div>
-            <button class="btn btn-reset" onclick="rpResetData()">🔄 Khôi phục ban đầu</button>
+            <div class="btn-group-right">
+                <button class="btn" style="background-color: #f59e0b; color: white;" onclick="rpUndoClear()">↩️ Hoàn tác</button>
+                <button class="btn btn-reset" onclick="rpClearAll()">🗑️ Xóa báo cáo cũ</button>
+            </div>
         </div>
     </div>
 
@@ -767,6 +582,7 @@
         if (data.students) {
             data.students.forEach(item => rpRenderRow(item.name, item.btvn, item.score, item.note));
         }
+        rpUpdateStats(); // Cập nhật thống kê khi load data
     }
 
     function rpRenderRow(name, btvn, score, note) {
@@ -797,43 +613,186 @@
         rpTargetRow = null; rpMenu.style.display = "none";
     }
 
-    function rpAddRow() { rpRenderRow("Tên học sinh", "Đủ", "0/20", "Nhập nhận xét..."); rpAutoSave(); }
+    function rpAddRow() { rpRenderRow("Tên học sinh", "", "", "Nhập nhận xét..."); rpAutoSave(); }
+
+    function rpGetRawData() {
+        const rows = rpTableBody.querySelectorAll("tr");
+        const studentsData = [];
+        rows.forEach(row => {
+            const cells = row.querySelectorAll("td");
+            studentsData.push({
+                name: cells[0].innerText.trim(), btvn: cells[1].innerText.trim(),
+                score: cells[2].innerText.trim(), note: cells[3].innerText.trim()
+            });
+        });
+        return {
+            classInfo: {
+                className: document.getElementById("rpInfoClass").innerText.trim(),
+                lessonNo: document.getElementById("rpInfoLesson").innerText.trim(),
+                date: document.getElementById("rpInfoDate").innerText.trim(),
+                content: document.getElementById("rpLessonContent").innerText.trim(),
+                homework: document.getElementById("rpLessonHomework").innerText.trim()
+            },
+            students: studentsData
+        };
+    }
 
     function rpAutoSave() {
         rpSaveStatus.innerText = "⏳ Đang gõ...";
+        rpUpdateStats(); // Cập nhật thống kê ngay khi có chỉnh sửa
         clearTimeout(rpTimeoutId);
         rpTimeoutId = setTimeout(() => {
-            const rows = rpTableBody.querySelectorAll("tr");
-            const studentsData = [];
-            rows.forEach(row => {
-                const cells = row.querySelectorAll("td");
-                studentsData.push({
-                    name: cells[0].innerText.trim(), btvn: cells[1].innerText.trim(),
-                    score: cells[2].innerText.trim(), note: cells[3].innerText.trim()
-                });
-            });
-
-            const fullData = {
-                classInfo: {
-                    className: document.getElementById("rpInfoClass").innerText.trim(),
-                    lessonNo: document.getElementById("rpInfoLesson").innerText.trim(),
-                    date: document.getElementById("rpInfoDate").innerText.trim(),
-                    content: document.getElementById("rpLessonContent").innerText.trim(),
-                    homework: document.getElementById("rpLessonHomework").innerText.trim()
-                },
-                students: studentsData
-            };
+            const fullData = rpGetRawData();
             if (rpDbRef) rpDbRef.set(fullData);
             rpSaveStatus.innerText = "✓ Đã lưu đồng bộ";
             setTimeout(() => rpSaveStatus.innerText = "", 2000);
         }, 800);
     }
 
+    /* --- CẬP NHẬT THỐNG KÊ NHANH --- */
+    function rpUpdateStats() {
+        const rows = rpTableBody.querySelectorAll("tr");
+        let total = rows.length;
+        let done = 0;
+        let missing = 0;
+        let totalScore = 0;
+        let scoreCount = 0;
+
+        rows.forEach(row => {
+            const cells = row.querySelectorAll("td");
+            if (cells.length < 4) return;
+            
+            const btvnText = cells[1].innerText.trim().toLowerCase();
+            const scoreText = cells[2].innerText.trim();
+
+            // Tính BTVN
+            if (btvnText.includes("chưa") || btvnText.includes("thiếu") || btvnText.includes("không")) {
+                missing++;
+            } else if (btvnText.length > 0) {
+                done++;
+            }
+
+            // Tính Điểm (bóc tách con số, ví dụ "8/10" -> "8")
+            const match = scoreText.match(/^([\d.]+)/);
+            if (match && !isNaN(match[1])) {
+                totalScore += parseFloat(match[1]);
+                scoreCount++;
+            }
+        });
+
+        let avgScore = scoreCount > 0 ? (totalScore / scoreCount).toFixed(2) : "0";
+        
+        document.getElementById("rpQuickStats").innerText = 
+            `📊 Thống kê nhanh: Sĩ số: ${total} | Đầy đủ BTVN: ${done} | Thiếu/Không làm: ${missing} | Điểm TB bài Test: ${avgScore}`;
+    }
+
+    /* --- CHỨC NĂNG: TẢI FILE EXCEL (CSV) --- */
+    function rpExportToCSV() {
+        let csv = [];
+        const className = document.getElementById("rpInfoClass").innerText.trim();
+        const lessonNo = document.getElementById("rpInfoLesson").innerText.trim();
+        const date = document.getElementById("rpInfoDate").innerText.trim();
+
+        // Ký tự BOM để Excel đọc đúng tiếng Việt (UTF-8)
+        const BOM = "\uFEFF"; 
+        
+        csv.push(`Thông tin lớp:,${className}`);
+        csv.push(`Buổi số:,${lessonNo}`);
+        csv.push(`Ngày:,${date}`);
+        csv.push(""); // Dòng trống
+
+        // Tiêu đề cột
+        csv.push("Họ và tên,BTVN,Điểm KT,Nhận xét");
+
+        // Quét từng dòng dữ liệu học sinh
+        const rows = rpTableBody.querySelectorAll("tr");
+        rows.forEach(row => {
+            const cells = row.querySelectorAll("td");
+            let rowData = [];
+            cells.forEach(cell => {
+                // Thoát các ký tự ngoặc kép để tránh bị lỗi cột trong Excel
+                let text = cell.innerText.trim().replace(/"/g, '""');
+                rowData.push(`"${text}"`);
+            });
+            csv.push(rowData.join(","));
+        });
+
+        // Tạo file và kích hoạt tải về
+        const csvContent = BOM + csv.join("\n");
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `BaoCao_${className}_Buoi_${lessonNo}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    /* --- XÓA VÀ HOÀN TÁC --- */
+    function rpClearAll() {
+        if (confirm("⚠️ Bạn có chắc muốn XÓA TOÀN BỘ nội dung và danh sách học sinh để tạo báo cáo mới không?")) {
+            const currentData = rpGetRawData();
+            localStorage.setItem('ielts_report_backup', JSON.stringify(currentData));
+            
+            document.getElementById("rpInfoLesson").innerText = "...";
+            document.getElementById("rpInfoDate").innerText = "...";
+            document.getElementById("rpLessonContent").innerText = "- Nhập nội dung học...";
+            document.getElementById("rpLessonHomework").innerText = "- Nhập BTVN...";
+            rpTableBody.innerHTML = "";
+            
+            if (rpDbRef) rpDbRef.set({});
+            rpUpdateStats();
+        }
+    }
+
+    function rpUndoClear() {
+        const backupDataString = localStorage.getItem('ielts_report_backup');
+        if (!backupDataString) { alert("Không tìm thấy dữ liệu nào đã bị xóa trước đó để hoàn tác!"); return; }
+        if (confirm("🔄 Khôi phục lại bản báo cáo trước khi bị xóa?")) {
+            const backupData = JSON.parse(backupDataString);
+            rpApplyData(backupData);
+            if (rpDbRef) rpDbRef.set(backupData);
+            alert("✅ Đã khôi phục thành công!");
+        }
+    }
+
+    /* --- ĐỒNG BỘ GHI CHÚ TỪ BTVN SANG BÁO CÁO (Chỉ lấy ghi chú) --- */
+    function rpSyncFromHW() {
+        if (hwStudentsData.length === 0) { alert("Chưa có danh sách học sinh ở phần BTVN!"); return; }
+        if (rpTableBody.querySelectorAll("tr").length > 0) {
+            if(!confirm("Bảng báo cáo hiện đang có dữ liệu. Xóa bảng hiện tại để TẠO TỰ ĐỘNG danh sách từ phần BTVN sang?")) return;
+        }
+
+        rpTableBody.innerHTML = ""; // Xóa bảng hiện tại
+
+        hwStudentsData.forEach(student => {
+            let noteArr = [];
+
+            // Quét từng bài tập để lấy ghi chú
+            student.hw.forEach((h, index) => {
+                let colName = hwColumnsData[index] || `BTVN ${index+1}`;
+                if (h.note && h.note.trim() !== "") {
+                    noteArr.push(`${colName}: ${h.note.trim()}`);
+                }
+            });
+
+            // Cột BTVN để trống cho giáo viên tự điền
+            let btvnColText = ""; 
+            let noteColText = noteArr.length > 0 ? `[Ghi chú BTVN: ${noteArr.join(" | ")}] ` : "Nhập nhận xét...";
+
+            rpRenderRow(student.name, btvnColText, "", noteColText);
+        });
+        
+        rpAutoSave();
+        alert("✅ Đã đồng bộ danh sách học sinh và ghi chú thành công!");
+    }
+
     async function rpExportToPDF() {
         const btn = document.getElementById("btnExportPdf");
         const oldText = btn.innerText; btn.disabled = true; btn.innerText = "⏳ Đang tạo PDF...";
         const container = document.getElementById("reportApp");
-        const hiddenEls = container.querySelectorAll(".bottom-toolbar, .save-status");
+        const hiddenEls = container.querySelectorAll(".bottom-toolbar, .save-status, .quick-stats");
         
         hiddenEls.forEach(el => el.style.display = "none");
         if (rpTargetRow) rpTargetRow.classList.remove("context-selected");
@@ -859,12 +818,6 @@
         finally {
             hiddenEls.forEach(el => el.style.display = "");
             btn.disabled = false; btn.innerText = oldText;
-        }
-    }
-
-    function rpResetData() {
-        if (confirm("Reset lại báo cáo?")) {
-            if (rpDbRef) rpDbRef.set({});
         }
     }
 
