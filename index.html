@@ -729,31 +729,58 @@
         document.body.removeChild(link);
     }
 
-    /* --- XÓA VÀ HOÀN TÁC --- */
+    /* --- XÓA VÀ HOÀN TÁC (tối đa 5 bước gần nhất) --- */
+    const RP_UNDO_KEY = 'ielts_report_undo_stack';
+    const RP_UNDO_MAX_STEPS = 5;
+
+    function rpGetUndoStack() {
+        try {
+            const stack = JSON.parse(localStorage.getItem(RP_UNDO_KEY));
+            return Array.isArray(stack) ? stack : [];
+        } catch (e) { return []; }
+    }
+
+    function rpPushUndoSnapshot(data) {
+        const stack = rpGetUndoStack();
+        stack.push(data);
+        while (stack.length > RP_UNDO_MAX_STEPS) stack.shift(); // chỉ giữ tối đa 5 bước gần nhất
+        localStorage.setItem(RP_UNDO_KEY, JSON.stringify(stack));
+    }
+
     function rpClearAll() {
-        if (confirm("⚠️ Bạn có chắc muốn XÓA TOÀN BỘ nội dung và danh sách học sinh để tạo báo cáo mới không?")) {
+        if (confirm("⚠️ Bạn có chắc muốn XÓA BTVN, ĐIỂM KT và NHẬN XÉT của tất cả học sinh (giữ lại danh sách tên) để tạo báo cáo mới không?")) {
             const currentData = rpGetRawData();
-            localStorage.setItem('ielts_report_backup', JSON.stringify(currentData));
-            
+            rpPushUndoSnapshot(currentData);
+
             document.getElementById("rpInfoLesson").innerText = "...";
             document.getElementById("rpInfoDate").innerText = "...";
             document.getElementById("rpLessonContent").innerText = "- Nhập nội dung học...";
             document.getElementById("rpLessonHomework").innerText = "- Nhập BTVN...";
-            rpTableBody.innerHTML = "";
-            
-            if (rpDbRef) rpDbRef.set({});
+
+            // Chỉ xóa BTVN, điểm KT, nhận xét - GIỮ LẠI tên học sinh và số dòng
+            rpTableBody.querySelectorAll("tr").forEach(row => {
+                const cells = row.querySelectorAll("td");
+                if (cells.length >= 4) {
+                    cells[1].innerText = "";
+                    cells[2].innerText = "";
+                    cells[3].innerText = "Nhập nhận xét...";
+                }
+            });
+
+            rpAutoSave();
             rpUpdateStats();
         }
     }
 
     function rpUndoClear() {
-        const backupDataString = localStorage.getItem('ielts_report_backup');
-        if (!backupDataString) { alert("Không tìm thấy dữ liệu nào đã bị xóa trước đó để hoàn tác!"); return; }
-        if (confirm("🔄 Khôi phục lại bản báo cáo trước khi bị xóa?")) {
-            const backupData = JSON.parse(backupDataString);
+        const stack = rpGetUndoStack();
+        if (stack.length === 0) { alert("Không tìm thấy dữ liệu nào đã bị xóa trước đó để hoàn tác!"); return; }
+        if (confirm(`🔄 Khôi phục lại bản báo cáo trước khi bị xóa? (còn ${stack.length} bước có thể hoàn tác)`)) {
+            const backupData = stack.pop();
+            localStorage.setItem(RP_UNDO_KEY, JSON.stringify(stack));
             rpApplyData(backupData);
             if (rpDbRef) rpDbRef.set(backupData);
-            alert("✅ Đã khôi phục thành công!");
+            alert(`✅ Đã khôi phục thành công! (còn ${stack.length} bước có thể hoàn tác)`);
         }
     }
 
@@ -779,7 +806,7 @@
 
             // Cột BTVN để trống cho giáo viên tự điền
             let btvnColText = ""; 
-            let noteColText = noteArr.length > 0 ? `[Ghi chú BTVN: ${noteArr.join(" | ")}] ` : "Nhập nhận xét...";
+            let noteColText = noteArr.length > 0 ? noteArr.join(" | ") : "Nhập nhận xét...";
 
             rpRenderRow(student.name, btvnColText, "", noteColText);
         });
