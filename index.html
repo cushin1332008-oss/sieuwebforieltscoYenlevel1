@@ -797,10 +797,12 @@
             let noteArr = [];
 
             // Quét từng bài tập để lấy ghi chú
+            // Ưu tiên dùng TÊN BÀI (vd: "KET TEST 9") đã nhập ở cột BTVN thay vì tên cột (vd: "BTVN 2 LESSON 14")
             student.hw.forEach((h, index) => {
                 let colName = hwColumnsData[index] || `BTVN ${index+1}`;
+                let hwTitle = (h.text && h.text.trim() !== "") ? h.text.trim() : colName;
                 if (h.note && h.note.trim() !== "") {
-                    noteArr.push(`${colName}: ${h.note.trim()}`);
+                    noteArr.push(`${hwTitle}: ${h.note.trim()}`);
                 }
             });
 
